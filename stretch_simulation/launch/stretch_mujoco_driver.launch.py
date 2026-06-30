@@ -78,6 +78,13 @@ def generate_launch_description():
         )
     )
     ld.add_action(
+        DeclareLaunchArgument(
+            "scene_xml_path",
+            default_value="",
+            description="Optional MJCF path; only used when use_robocasa:=false. Empty -> built-in scene.xml.",
+        )
+    )
+    ld.add_action(
         DeclareLaunchArgument("robocasa_task", default_value="PnPCounterToCab")
     )
     ld.add_action(
@@ -181,6 +188,7 @@ def generate_launch_description():
             "use_mujoco_viewer": LaunchConfiguration("use_mujoco_viewer"),
             "use_cameras": LaunchConfiguration("use_cameras"),
             "use_robocasa": LaunchConfiguration("use_robocasa"),
+            "scene_xml_path": LaunchConfiguration("scene_xml_path"),
             "robocasa_task": LaunchConfiguration("robocasa_task"),
             "robocasa_layout": (
                 robocasa_layout

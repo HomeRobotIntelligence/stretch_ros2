@@ -68,6 +68,11 @@
         use_rgb_only: False
         name: 'target_object'
         link: None
+      '1':
+        length_mm: 86
+        use_rgb_only: False
+        name: 'target_frame'
+        link: 'target_frame'    
       '21':
         length_mm: 86
         use_rgb_only: False

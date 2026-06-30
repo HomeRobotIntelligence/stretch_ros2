@@ -34,5 +34,11 @@ build/
 install/
 log/
 
+# Python virtualenvs
+.venv/
+
+# Model weights
+*.pt
+
 # VSCode
 .vscode/

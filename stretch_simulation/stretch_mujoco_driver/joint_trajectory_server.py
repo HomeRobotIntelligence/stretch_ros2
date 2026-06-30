@@ -130,6 +130,16 @@ class JointTrajectoryAction:
                     self.node.sim.set_base_velocity(velocity, 0)
                     continue
 
+                if actuator in (Actuators.base_translate, Actuators.base_rotate):
+                    # The mobile base is an incremental (move_by) actuator,
+                    # not an absolute setpoint. keyboard_teleop / position-mode
+                    # callers send the increment as the point position, so use
+                    # the per-point delta. move_to() here is a no-op for the
+                    # base (lift/arm work because they ARE move_to actuators).
+                    self.node.sim.move_by(actuator, delta)
+                    self.node.sim.wait_while_is_moving(actuator)
+                    continue
+
                 self.node.sim.move_to(actuator, target_position)
 
                 actuators_in_use.append(actuator)

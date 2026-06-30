@@ -90,6 +90,9 @@ class StretchMujocoDriver(Node):
         self.declare_parameter("use_cameras", False)
         self.declare_parameter("use_mujoco_viewer", True)
         self.declare_parameter("use_robocasa", True)
+        # Optional path to a custom MJCF scene to load when use_robocasa is False.
+        # Empty (default) -> stretch_mujoco's built-in scene.xml.
+        self.declare_parameter("scene_xml_path", "")
         self.declare_parameter("robocasa_task", DEFAULT_ROBOCASA_TASK)
         self.declare_parameter("robocasa_layout", None)
         self.declare_parameter("robocasa_style", None)
@@ -133,13 +136,19 @@ class StretchMujocoDriver(Node):
                 style=robocasa_style,
             )
 
-        sim = StretchMujocoSimulator(
+        scene_xml_path = self.get_parameter("scene_xml_path").value
+        sim_kwargs = dict(
             model=model,
             camera_hz=10,
             cameras_to_use=(
                 StretchCameras.all() if use_cameras else StretchCameras.none()
             ),
         )
+        if not use_robocasa and scene_xml_path:
+            sim_kwargs["scene_xml_path"] = scene_xml_path
+            self.get_logger().info(
+                f"Loading custom scene: {scene_xml_path}")
+        sim = StretchMujocoSimulator(**sim_kwargs)
 
         sim.start(headless=not use_mujoco_viewer)
 
